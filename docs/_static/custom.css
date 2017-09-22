@@ -1,0 +1,92 @@
+@import url('http:////cdn.jsdelivr.net/font-hack/2.020/css/hack-extended.min.css');
+
+slides slide {
+	font-family: Avenir, 'Open Sans', Arial, sans-serif;
+}
+
+.highlight, .linenodiv pre {
+  overflow: hidden;
+  background: transparent;
+}
+
+.highlight pre, .linenodiv pre {
+	font-family: 'Hack', 'Source Code Pro', 'Courier New', monospace;
+	padding: 10px 10px 10px 10px;
+	width: 100%;
+	left: 0px;
+	margin: 2px 2px 2px 2px;
+}
+
+.highlight .hll {
+	padding: 0px 100% 5px 0px;
+}
+
+td.linenos, td.code {
+	padding: 0px;
+}
+
+table.highlighttable {
+	border-bottom: 0px;
+}
+
+div.code-block-caption {
+	padding-bottom: 10px;
+}
+
+a.image-reference {
+	border-bottom: 0px;
+}
+
+.float-50 {
+	float: left;
+	width: 49%;
+	padding-right: 5px;
+}
+
+.title-slide hgroup, .title-slide article {
+    top: 40%;
+    position: relative;
+}
+
+.sub-title {
+  font-size: 38px;
+  line-height: 38px;
+  letter-spacing: -2px;
+  color: #515151;
+  font-weight: 600;
+}
+
+.section h2 {
+  text-transform: uppercase;
+  font-size: 2em;
+  line-height: 1em;
+  margin: 10% 15% 10% 8%;
+}
+
+div.warning {
+    padding: 4px 4px 4px 4px;
+    background-color: #6D7B8D;
+    border-radius: 25px;
+    color: white;
+}
+
+div.warning p.first {
+    display: none;
+}
+
+div.warning p.last::before {
+    content: "⚠ ";
+}
+div.warning p.last {
+    font-size: 0.75em;
+    margin: 4px 4px 4px 4px;
+}
+
+@media print {
+  slides slide {
+    background: white !important;
+  }
+  body {
+	  background: white !important;
+  }
+}

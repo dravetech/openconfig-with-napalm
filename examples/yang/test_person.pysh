@@ -1,0 +1,18 @@
+>>> import person
+>>> import pyangbind.lib.pybindJSON as pybindJSON
+>>> 
+>>> data = {'Person': {'age': 40, 'name': 'Jane'}}
+>>> p1 = pybindJSON.loads(data, person, 'person')
+>>> p1.Person.name, p2.Person.age
+(u'Jane', 40)
+>>> 
+>>> p2 = person.person()
+>>> p2.Person.name = "John"
+>>> p2.Person.age = "4O"  # <---- it's letter O, not number 0
+Traceback (most recent call last):
+  File "person.py", line 134, in _set_age
+    'generated-type': """YANGDynClass(base=RestrictedClassType(base_type=int, restriction_dict={'range': ['0..65535']},int_size=16), is_leaf=True, yang_name="age", parent=self, path_helper=self._path_helper, extmethods=self._extmethods, register_paths=True, namespace='http://test.local/person', defining_module='person', yang_type='uint16', is_config=True)""",
+ValueError: {'error-string': 'age must be of a type compatible with uint16', 'generated-type': 'YANGDynClass(base=RestrictedClassType(base_type=int, restriction_dict={\'range\': [\'0..65535\']},int_size=16), is_leaf=True, yang_name="age", parent=self, path_helper=self._path_helper, extmethods=self._extmethods, register_paths=True, namespace=\'http://test.local/person\', defining_module=\'person\', yang_type=\'uint16\', is_config=True)', 'defined-type': 'uint16'}
+>>> p2.Person.age = "40"
+>>> p2.get()
+{'Person': {'age': 40, 'name': u'John'}}

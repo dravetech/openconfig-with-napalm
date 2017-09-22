@@ -1,0 +1,34 @@
+module person-extension {
+
+  yang-version "1";
+
+  namespace "http://test.local/person-extension";
+
+  prefix "person-extension";
+
+  import person { prefix person; }
+
+  identity GENDER {
+    description "Gender p identifies with";
+  }
+  identity MAN {
+    base GENDER;
+  }
+  identity WOMAN {
+    base GENDER;
+  }
+  identity OTHER {
+    base GENDER;
+  }
+
+  grouping person-extended {
+    leaf gender {
+      type identityref {
+        base GENDER;
+      }
+    }
+  }
+  augment "/person:Person" {
+    uses person-extended;
+  }
+}

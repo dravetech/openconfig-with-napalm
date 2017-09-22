@@ -1,0 +1,15 @@
+module person {
+  prefix "person";
+  namespace "http://test.local/person";
+
+  container Person {
+    leaf name {
+      description "Person's name";
+      type string;
+    }
+    leaf age {
+      description "Person's age";
+      type uint16;
+    }
+  }
+}

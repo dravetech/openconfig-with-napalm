@@ -1,0 +1,15 @@
+module person-deviation {
+
+  yang-version "1";
+
+  namespace "http://test.local/person-deviation";
+
+  prefix "person-deviation";
+
+  import person { prefix person; }
+
+  deviation "/person:Person/person:age" {
+    deviate not-supported;
+  }
+
+}
