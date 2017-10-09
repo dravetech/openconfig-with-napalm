@@ -10,6 +10,8 @@ Summary
 References
 ----------
 
+https://github.com/dravetech/openconfig-with-napalm
+
 https://github.com/napalm-automation/napalm
 
 https://github.com/napalm-automation/napalm-yang
