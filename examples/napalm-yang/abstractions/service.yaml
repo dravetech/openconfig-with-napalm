@@ -1,0 +1,4 @@
+---
+fabric_link:
+    - ip: 10.0.0.0/31
+      connects_to: spine00

@@ -1,0 +1,79 @@
+root@vsrx> show configuration interfaces
+ge-0/0/0 {
+    unit 0 {
+        family inet {
+            address 10.0.2.15/24;
+        }
+    }
+}
+ge-0/0/1 {
+    promiscuous-mode;
+    unit 0 {
+        family inet {
+            address 192.168.1.1/24;
+        }
+    }
+}
+
+{ "interfaces": { "interface": { "both": {
+    "ge-0/0/1": {
+        "subinterfaces": { "subinterface": {
+                "both": {
+                    "0": {
+                        "ipv4": {
+                            "addresses": {
+                                "address": {
+                                    "second_only": [
+                                        "192.168.1.1"
+                                    ],
+                                    "first_only": [
+                                        "192.168.2.1"
+                                    ]
+}}}}}}}}}}}}
+
+<configuration>
+  <interfaces replace="replace">
+    <interface>
+      <name>ge-0/0/0</name>
+      <unit>
+        <name>0</name>
+        <family>
+          <inet>
+            <address>
+              <name>10.0.2.15/24</name>
+            </address>
+          </inet>
+        </family>
+      </unit>
+    </interface>
+    <interface>
+      <name>ge-0/0/1</name>
+      <unit>
+        <name>0</name>
+        <family>
+          <inet>
+            <address>
+              <name>192.168.2.1/24</name>
+            </address>
+          </inet>
+        </family>
+      </unit>
+    </interface>
+  </interfaces>
+</configuration>
+
+root@vsrx> show configuration interfaces
+ge-0/0/0 {
+    unit 0 {
+        family inet {
+            address 10.0.2.15/24;
+        }
+    }
+}
+ge-0/0/1 {
+    unit 0 {
+        family inet {
+            address 192.168.2.1/24;
+        }
+    }
+}

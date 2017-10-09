@@ -1,0 +1,550 @@
+<!--
+Google IO 2012/2013 HTML5 Slide Template
+
+Authors: Eric Bidelman <ebidel@gmail.com>
+         Luke Mahé <lukem@google.com>
+
+URL: https://code.google.com/p/io-2012-slides
+--><!DOCTYPE html>
+
+
+<html>
+<head>
+  <title>Agenda &mdash; OpenConfig with NAPALM 2017.09.17 documentation</title>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <!--<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">-->
+  <!--<meta name="viewport" content="width=device-width, initial-scale=1.0">-->
+  <!--This one seems to work all the time, but really small on ipad-->
+  <!--<meta name="viewport" content="initial-scale=0.4">-->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+
+  <meta name="hieroglyph-title" data-config-title>
+  <meta name="hieroglyph-subtitle" data-config-subtitle>
+  <meta name="hieroglyph-presenter" data-config-presenter>
+
+  
+  <link rel="stylesheet" media="all"
+        href="_static/theme/css/default.css">
+  <link rel="stylesheet" media="all"
+        href="_static/theme/css/hieroglyph.css">
+  <link rel="stylesheet" media="only screen and (max-device-width: 480px)"
+        href="_static/theme/css/phone.css">
+
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  
+  <link rel="stylesheet" href="_static/custom.css"
+        type="text/css" />
+  
+  <base target="_blank"> <!-- This amazingness opens all links in a new tab. -->
+  
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '2017.09.17',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+
+    <script data-main="_static/js/slides"
+            src="_static/js/require-1.0.8.min.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="top" title="OpenConfig with NAPALM 2017.09.17 documentation" href="index.html" /> 
+</head>
+<body style="opacity: 0">
+
+<slides class="layout-widescreen">
+
+  
+
+  
+    <slide class="title-slide segue nobackground agenda level-1" id="agenda">
+    <hgroup>
+      <h1>Agenda</h1>
+    </hgroup>
+    <article class="">
+      <ol class="arabic simple">
+<li><strong>What is YANG?</strong></li>
+<li>What is OpenConfig?</li>
+<li>What is napalm-yang?</li>
+</ol>
+
+
+
+
+    </article>
+  </slide>  <slide class="level-1" id="what-is-yang">
+    <hgroup>
+      <h1>What is YANG?</h1>
+    </hgroup>
+    <article class="">
+      <ol class="arabic simple">
+<li>A Data Modeling Language for the Network Configuration Protocol (NETCONF)</li>
+<li>RFC6020</li>
+</ol>
+<hr class="docutils" />
+<p class="sub-title build-item-1">What is not YANG?</p>
+<ol class="build-item-1 arabic simple">
+<li>An API</li>
+<li>Developed exclusively for NETCONF/gRPC</li>
+<li>JSON or XML</li>
+</ol>
+<div class="build-item-2 admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">Not a YANG tutorial so forgive the handwaving</p>
+</div>
+
+
+
+
+    </article>
+  </slide>  <slide class="level-1" id="yang-vs-json-vs-xml">
+    <hgroup>
+      <h1>YANG vs JSON vs XML</h1>
+    </hgroup>
+    <article class="">
+      <div class="literal-block-wrapper float-50 docutils container" id="id1">
+<div class="code-block-caption"><span class="caption-text">person.yang</span></div>
+<div class="highlight-yang"><div class="highlight"><pre><span></span><span class="kn">module </span><span class="s">person</span> <span class="p">{</span>
+  <span class="k">prefix</span><span class="s"> &quot;person&quot;</span><span class="p">;</span>
+  <span class="k">namespace</span><span class="s"> &quot;http://test.local/person&quot;</span><span class="p">;</span>
+
+  <span class="k">container </span><span class="s">Person</span> <span class="p">{</span>
+    <span class="k">leaf </span><span class="s">name</span> <span class="p">{</span>
+      <span class="k">description</span><span class="sd"> &quot;Person&#39;s name&quot;</span><span class="p">;</span>
+      <span class="k">type </span><span class="s">string</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">leaf </span><span class="s">age</span> <span class="p">{</span>
+      <span class="k">description</span><span class="sd"> &quot;Person&#39;s age&quot;</span><span class="p">;</span>
+      <span class="k">type </span><span class="s">uint16</span><span class="p">;</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="literal-block-wrapper float-50 docutils container" id="id2">
+<div class="code-block-caption"><span class="caption-text">person.json</span></div>
+<div class="highlight-json"><div class="highlight"><pre><span></span><span class="p">{</span>
+  <span class="nt">&quot;Person&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;John&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;age&quot;</span><span class="p">:</span> <span class="mi">42</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="literal-block-wrapper float-50 docutils container" id="id3">
+<div class="code-block-caption"><span class="caption-text">person.xml</span></div>
+<div class="highlight-xml"><div class="highlight"><pre><span></span><span class="nt">&lt;person&gt;</span>
+    <span class="nt">&lt;name&gt;</span>John<span class="nt">&lt;/name&gt;</span>
+    <span class="nt">&lt;age&gt;</span>42<span class="nt">&lt;/age&gt;</span>
+<span class="nt">&lt;/person&gt;</span>
+</pre></div>
+</div>
+</div>
+
+
+
+
+    </article>
+  </slide>  <slide class="level-1" id="why-do-i-care">
+    <hgroup>
+      <h1>Why do I care?</h1>
+    </hgroup>
+    <article class="">
+      <div class="literal-block-wrapper float-50 docutils container" id="id4">
+<div class="code-block-caption"><span class="caption-text">generate documentation</span></div>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>$ pyang -f tree person.yang
+module: person
+    +--rw Person
+       +--rw name?   string
+       +--rw age?    uint16
+</pre></div>
+</div>
+</div>
+<div class="literal-block-wrapper float-50 docutils container" id="id5">
+<div class="code-block-caption"><span class="caption-text">generate diagrams</span></div>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>$ pyang -f omni person.yang &gt; person.scpt
+$ osascript person.scpt
+</pre></div>
+</div>
+</div>
+<a class="reference internal image-reference" href="_images/person.png"><img alt="_images/person.png" src="_images/person.png" style="width: 454.8px; height: 234.6px;" /></a>
+
+
+
+
+    </article>
+  </slide>  <slide class="level-1" id="id14">
+    <hgroup>
+      <h1>Why do I care?</h1>
+    </hgroup>
+    <article class="">
+      <div class="literal-block-wrapper docutils container" id="id6">
+<div class="code-block-caption"><span class="caption-text">generate code</span></div>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>$ <span class="nb">export</span> <span class="nv">PYBINDPLUGIN</span><span class="o">=</span><span class="sb">`</span>/usr/bin/env python -c <span class="se">\</span>
+ <span class="s1">&#39;import pyangbind; import os; print &quot;%s/plugin&quot; % os.path.dirname(pyangbind.__file__)&#39;</span><span class="sb">`</span>
+$ pyang --plugindir <span class="nv">$PYBINDPLUGIN</span> -f pybind person.yang &gt; person.py
+</pre></div>
+</div>
+</div>
+<div class="literal-block-wrapper docutils container" id="id7">
+<div class="code-block-caption"><span class="caption-text">person.py (excerpt)</span></div>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">yc_Person_person__Person</span><span class="p">(</span><span class="n">PybindBase</span><span class="p">):</span>
+  <span class="n">_yang_name</span> <span class="o">=</span> <span class="s1">&#39;Person&#39;</span>
+
+  <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">__age</span> <span class="o">=</span> <span class="n">YANGDynClass</span><span class="p">(</span><span class="n">base</span><span class="o">=</span><span class="n">RestrictedClassType</span><span class="p">(</span><span class="n">base_type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">restriction_dict</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;range&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;0..65535&#39;</span><span class="p">]},</span><span class="n">int_size</span><span class="o">=</span><span class="mi">16</span><span class="p">),</span> <span class="n">is_leaf</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">yang_name</span><span class="o">=</span><span class="s2">&quot;age&quot;</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">path_helper</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_path_helper</span><span class="p">,</span> <span class="n">extmethods</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_extmethods</span><span class="p">,</span> <span class="n">register_paths</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">namespace</span><span class="o">=</span><span class="s1">&#39;http://test.local/person&#39;</span><span class="p">,</span> <span class="n">defining_module</span><span class="o">=</span><span class="s1">&#39;person&#39;</span><span class="p">,</span> <span class="n">yang_type</span><span class="o">=</span><span class="s1">&#39;uint16&#39;</span><span class="p">,</span> <span class="n">is_config</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">__name</span> <span class="o">=</span> <span class="n">YANGDynClass</span><span class="p">(</span><span class="n">base</span><span class="o">=</span><span class="nb">unicode</span><span class="p">,</span> <span class="n">is_leaf</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">yang_name</span><span class="o">=</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">path_helper</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_path_helper</span><span class="p">,</span> <span class="n">extmethods</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_extmethods</span><span class="p">,</span> <span class="n">register_paths</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">namespace</span><span class="o">=</span><span class="s1">&#39;http://test.local/person&#39;</span><span class="p">,</span> <span class="n">defining_module</span><span class="o">=</span><span class="s1">&#39;person&#39;</span><span class="p">,</span> <span class="n">yang_type</span><span class="o">=</span><span class="s1">&#39;string&#39;</span><span class="p">,</span> <span class="n">is_config</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+
+  <span class="k">def</span> <span class="nf">_get_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+  <span class="k">def</span> <span class="nf">_set_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">load</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+</pre></div>
+</div>
+</div>
+
+
+
+
+    </article>
+  </slide>  <slide class="level-1" id="id15">
+    <hgroup>
+      <h1>Why do I care?</h1>
+    </hgroup>
+    <article class="">
+      <div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">person</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pyangbind.lib.pybindJSON</span> <span class="kn">as</span> <span class="nn">pybindJSON</span>
+<span class="gp">&gt;&gt;&gt; </span>
+<span class="hll"><span class="gp">&gt;&gt;&gt; </span><span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;Person&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;age&#39;</span><span class="p">:</span> <span class="mi">40</span><span class="p">,</span> <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;Jane&#39;</span><span class="p">}}</span>
+</span><span class="hll"><span class="gp">&gt;&gt;&gt; </span><span class="n">p1</span> <span class="o">=</span> <span class="n">pybindJSON</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">person</span><span class="p">,</span> <span class="s1">&#39;person&#39;</span><span class="p">)</span>
+</span><span class="hll"><span class="gp">&gt;&gt;&gt; </span><span class="n">p1</span><span class="o">.</span><span class="n">Person</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">p2</span><span class="o">.</span><span class="n">Person</span><span class="o">.</span><span class="n">age</span>
+</span><span class="hll"><span class="go">(u&#39;Jane&#39;, 40)</span>
+</span><span class="gp">&gt;&gt;&gt; </span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p2</span> <span class="o">=</span> <span class="n">person</span><span class="o">.</span><span class="n">person</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p2</span><span class="o">.</span><span class="n">Person</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;John&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p2</span><span class="o">.</span><span class="n">Person</span><span class="o">.</span><span class="n">age</span> <span class="o">=</span> <span class="s2">&quot;4O&quot;</span>  <span class="c1"># &lt;---- it&#39;s letter O, not number 0</span>
+<span class="gt">Traceback (most recent call last):</span>
+  File <span class="nb">&quot;person.py&quot;</span>, line <span class="m">134</span>, in <span class="n">_set_age</span>
+    <span class="s1">&#39;generated-type&#39;</span><span class="p">:</span> <span class="s2">&quot;&quot;&quot;YANGDynClass(base=RestrictedClassType(base_type=int, restriction_dict={&#39;range&#39;: [&#39;0..65535&#39;]},int_size=16), is_leaf=True, yang_name=&quot;age&quot;, parent=self, path_helper=self._path_helper, extmethods=self._extmethods, register_paths=True, namespace=&#39;http://test.local/person&#39;, defining_module=&#39;person&#39;, yang_type=&#39;uint16&#39;, is_config=True)&quot;&quot;&quot;</span><span class="p">,</span>
+<span class="gr">ValueError</span>: <span class="n">{&#39;error-string&#39;: &#39;age must be of a type compatible with uint16&#39;, &#39;generated-type&#39;: &#39;YANGDynClass(base=RestrictedClassType(base_type=int, restriction_dict={\&#39;range\&#39;: [\&#39;0..65535\&#39;]},int_size=16), is_leaf=True, yang_name=&quot;age&quot;, parent=self, path_helper=self._path_helper, extmethods=self._extmethods, register_paths=True, namespace=\&#39;http://test.local/person\&#39;, defining_module=\&#39;person\&#39;, yang_type=\&#39;uint16\&#39;, is_config=True)&#39;, &#39;defined-type&#39;: &#39;uint16&#39;}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p2</span><span class="o">.</span><span class="n">Person</span><span class="o">.</span><span class="n">age</span> <span class="o">=</span> <span class="s2">&quot;40&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p2</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
+<span class="go">{&#39;Person&#39;: {&#39;age&#39;: 40, &#39;name&#39;: u&#39;John&#39;}}</span>
+</pre></div>
+</td></tr></table></div>
+
+
+
+
+    </article>
+  </slide>  <slide class="level-1" id="id16">
+    <hgroup>
+      <h1>Why do I care?</h1>
+    </hgroup>
+    <article class="">
+      <div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">person</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pyangbind.lib.pybindJSON</span> <span class="kn">as</span> <span class="nn">pybindJSON</span>
+<span class="gp">&gt;&gt;&gt; </span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;Person&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;age&#39;</span><span class="p">:</span> <span class="mi">40</span><span class="p">,</span> <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;Jane&#39;</span><span class="p">}}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p1</span> <span class="o">=</span> <span class="n">pybindJSON</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">person</span><span class="p">,</span> <span class="s1">&#39;person&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p1</span><span class="o">.</span><span class="n">Person</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">p2</span><span class="o">.</span><span class="n">Person</span><span class="o">.</span><span class="n">age</span>
+<span class="go">(u&#39;Jane&#39;, 40)</span>
+<span class="gp">&gt;&gt;&gt; </span>
+<span class="hll"><span class="gp">&gt;&gt;&gt; </span><span class="n">p2</span> <span class="o">=</span> <span class="n">person</span><span class="o">.</span><span class="n">person</span><span class="p">()</span>
+</span><span class="hll"><span class="gp">&gt;&gt;&gt; </span><span class="n">p2</span><span class="o">.</span><span class="n">Person</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;John&quot;</span>
+</span><span class="hll"><span class="gp">&gt;&gt;&gt; </span><span class="n">p2</span><span class="o">.</span><span class="n">Person</span><span class="o">.</span><span class="n">age</span> <span class="o">=</span> <span class="s2">&quot;4O&quot;</span>  <span class="c1"># &lt;---- it&#39;s letter O, not number 0</span>
+</span><span class="gt">Traceback (most recent call last):</span>
+  File <span class="nb">&quot;person.py&quot;</span>, line <span class="m">134</span>, in <span class="n">_set_age</span>
+    <span class="s1">&#39;generated-type&#39;</span><span class="p">:</span> <span class="s2">&quot;&quot;&quot;YANGDynClass(base=RestrictedClassType(base_type=int, restriction_dict={&#39;range&#39;: [&#39;0..65535&#39;]},int_size=16), is_leaf=True, yang_name=&quot;age&quot;, parent=self, path_helper=self._path_helper, extmethods=self._extmethods, register_paths=True, namespace=&#39;http://test.local/person&#39;, defining_module=&#39;person&#39;, yang_type=&#39;uint16&#39;, is_config=True)&quot;&quot;&quot;</span><span class="p">,</span>
+<span class="gr">ValueError</span>: <span class="n">{&#39;error-string&#39;: &#39;age must be of a type compatible with uint16&#39;, &#39;generated-type&#39;: &#39;YANGDynClass(base=RestrictedClassType(base_type=int, restriction_dict={\&#39;range\&#39;: [\&#39;0..65535\&#39;]},int_size=16), is_leaf=True, yang_name=&quot;age&quot;, parent=self, path_helper=self._path_helper, extmethods=self._extmethods, register_paths=True, namespace=\&#39;http://test.local/person\&#39;, defining_module=\&#39;person\&#39;, yang_type=\&#39;uint16\&#39;, is_config=True)&#39;, &#39;defined-type&#39;: &#39;uint16&#39;}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p2</span><span class="o">.</span><span class="n">Person</span><span class="o">.</span><span class="n">age</span> <span class="o">=</span> <span class="s2">&quot;40&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p2</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
+<span class="go">{&#39;Person&#39;: {&#39;age&#39;: 40, &#39;name&#39;: u&#39;John&#39;}}</span>
+</pre></div>
+</td></tr></table></div>
+
+
+
+
+    </article>
+  </slide>  <slide class="level-1" id="id17">
+    <hgroup>
+      <h1>Why do I care?</h1>
+    </hgroup>
+    <article class="">
+      <div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">person</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pyangbind.lib.pybindJSON</span> <span class="kn">as</span> <span class="nn">pybindJSON</span>
+<span class="gp">&gt;&gt;&gt; </span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;Person&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;age&#39;</span><span class="p">:</span> <span class="mi">40</span><span class="p">,</span> <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;Jane&#39;</span><span class="p">}}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p1</span> <span class="o">=</span> <span class="n">pybindJSON</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">person</span><span class="p">,</span> <span class="s1">&#39;person&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p1</span><span class="o">.</span><span class="n">Person</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">p2</span><span class="o">.</span><span class="n">Person</span><span class="o">.</span><span class="n">age</span>
+<span class="go">(u&#39;Jane&#39;, 40)</span>
+<span class="gp">&gt;&gt;&gt; </span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p2</span> <span class="o">=</span> <span class="n">person</span><span class="o">.</span><span class="n">person</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p2</span><span class="o">.</span><span class="n">Person</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;John&quot;</span>
+<span class="hll"><span class="gp">&gt;&gt;&gt; </span><span class="n">p2</span><span class="o">.</span><span class="n">Person</span><span class="o">.</span><span class="n">age</span> <span class="o">=</span> <span class="s2">&quot;4O&quot;</span>  <span class="c1"># &lt;---- it&#39;s letter O, not number 0</span>
+</span><span class="hll"><span class="gt">Traceback (most recent call last):</span>
+</span><span class="hll">  File <span class="nb">&quot;person.py&quot;</span>, line <span class="m">134</span>, in <span class="n">_set_age</span>
+</span><span class="hll">    <span class="s1">&#39;generated-type&#39;</span><span class="p">:</span> <span class="s2">&quot;&quot;&quot;YANGDynClass(base=RestrictedClassType(base_type=int, restriction_dict={&#39;range&#39;: [&#39;0..65535&#39;]},int_size=16), is_leaf=True, yang_name=&quot;age&quot;, parent=self, path_helper=self._path_helper, extmethods=self._extmethods, register_paths=True, namespace=&#39;http://test.local/person&#39;, defining_module=&#39;person&#39;, yang_type=&#39;uint16&#39;, is_config=True)&quot;&quot;&quot;</span><span class="p">,</span>
+</span><span class="hll"><span class="gr">ValueError</span>: <span class="n">{&#39;error-string&#39;: &#39;age must be of a type compatible with uint16&#39;, &#39;generated-type&#39;: &#39;YANGDynClass(base=RestrictedClassType(base_type=int, restriction_dict={\&#39;range\&#39;: [\&#39;0..65535\&#39;]},int_size=16), is_leaf=True, yang_name=&quot;age&quot;, parent=self, path_helper=self._path_helper, extmethods=self._extmethods, register_paths=True, namespace=\&#39;http://test.local/person\&#39;, defining_module=\&#39;person\&#39;, yang_type=\&#39;uint16\&#39;, is_config=True)&#39;, &#39;defined-type&#39;: &#39;uint16&#39;}</span>
+</span><span class="gp">&gt;&gt;&gt; </span><span class="n">p2</span><span class="o">.</span><span class="n">Person</span><span class="o">.</span><span class="n">age</span> <span class="o">=</span> <span class="s2">&quot;40&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p2</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
+<span class="go">{&#39;Person&#39;: {&#39;age&#39;: 40, &#39;name&#39;: u&#39;John&#39;}}</span>
+</pre></div>
+</td></tr></table></div>
+
+
+
+
+    </article>
+  </slide>  <slide class="level-1" id="id18">
+    <hgroup>
+      <h1>Why do I care?</h1>
+    </hgroup>
+    <article class="">
+      <div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">person</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pyangbind.lib.pybindJSON</span> <span class="kn">as</span> <span class="nn">pybindJSON</span>
+<span class="gp">&gt;&gt;&gt; </span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;Person&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;age&#39;</span><span class="p">:</span> <span class="mi">40</span><span class="p">,</span> <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;Jane&#39;</span><span class="p">}}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p1</span> <span class="o">=</span> <span class="n">pybindJSON</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">person</span><span class="p">,</span> <span class="s1">&#39;person&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p1</span><span class="o">.</span><span class="n">Person</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">p2</span><span class="o">.</span><span class="n">Person</span><span class="o">.</span><span class="n">age</span>
+<span class="go">(u&#39;Jane&#39;, 40)</span>
+<span class="gp">&gt;&gt;&gt; </span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p2</span> <span class="o">=</span> <span class="n">person</span><span class="o">.</span><span class="n">person</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p2</span><span class="o">.</span><span class="n">Person</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;John&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p2</span><span class="o">.</span><span class="n">Person</span><span class="o">.</span><span class="n">age</span> <span class="o">=</span> <span class="s2">&quot;4O&quot;</span>  <span class="c1"># &lt;---- it&#39;s letter O, not number 0</span>
+<span class="gt">Traceback (most recent call last):</span>
+  File <span class="nb">&quot;person.py&quot;</span>, line <span class="m">134</span>, in <span class="n">_set_age</span>
+    <span class="s1">&#39;generated-type&#39;</span><span class="p">:</span> <span class="s2">&quot;&quot;&quot;YANGDynClass(base=RestrictedClassType(base_type=int, restriction_dict={&#39;range&#39;: [&#39;0..65535&#39;]},int_size=16), is_leaf=True, yang_name=&quot;age&quot;, parent=self, path_helper=self._path_helper, extmethods=self._extmethods, register_paths=True, namespace=&#39;http://test.local/person&#39;, defining_module=&#39;person&#39;, yang_type=&#39;uint16&#39;, is_config=True)&quot;&quot;&quot;</span><span class="p">,</span>
+<span class="gr">ValueError</span>: <span class="n">{&#39;error-string&#39;: &#39;age must be of a type compatible with uint16&#39;, &#39;generated-type&#39;: &#39;YANGDynClass(base=RestrictedClassType(base_type=int, restriction_dict={\&#39;range\&#39;: [\&#39;0..65535\&#39;]},int_size=16), is_leaf=True, yang_name=&quot;age&quot;, parent=self, path_helper=self._path_helper, extmethods=self._extmethods, register_paths=True, namespace=\&#39;http://test.local/person\&#39;, defining_module=\&#39;person\&#39;, yang_type=\&#39;uint16\&#39;, is_config=True)&#39;, &#39;defined-type&#39;: &#39;uint16&#39;}</span>
+<span class="hll"><span class="gp">&gt;&gt;&gt; </span><span class="n">p2</span><span class="o">.</span><span class="n">Person</span><span class="o">.</span><span class="n">age</span> <span class="o">=</span> <span class="s2">&quot;40&quot;</span>
+</span><span class="hll"><span class="gp">&gt;&gt;&gt; </span><span class="n">p2</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
+</span><span class="hll"><span class="go">{&#39;Person&#39;: {&#39;age&#39;: 40, &#39;name&#39;: u&#39;John&#39;}}</span>
+</span></pre></div>
+</td></tr></table></div>
+
+
+
+
+    </article>
+  </slide>  <slide class="level-1" id="extensibility-augmenting-the-model">
+    <hgroup>
+      <h1>Extensibility (augmenting the model)</h1>
+    </hgroup>
+    <article class="">
+      <p>Augmentations are part of the “standard” model</p>
+<div class="literal-block-wrapper float-50 docutils container" id="id8">
+<div class="code-block-caption"><span class="caption-text">person-extension.yang</span></div>
+<div class="highlight-yang"><div class="highlight"><pre><span></span><span class="kn">module </span><span class="s">person-extension</span> <span class="p">{</span>
+  <span class="k">import </span><span class="s">person</span> <span class="p">{</span> <span class="k">prefix</span><span class="s"> person</span><span class="p">;</span> <span class="p">}</span>
+
+  <span class="k">identity </span><span class="s">GENDER</span> <span class="p">{</span>
+    <span class="k">description</span><span class="sd"> &quot;Gender p identifies with&quot;</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="k">identity </span><span class="s">MAN</span> <span class="p">{</span>
+    <span class="k">base </span><span class="s">GENDER</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="k">identity </span><span class="s">WOMAN</span> <span class="p">{</span>
+    <span class="k">base </span><span class="s">GENDER</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="k">identity </span><span class="s">OTHER</span> <span class="p">{</span>
+    <span class="k">base </span><span class="s">GENDER</span><span class="p">;</span>
+  <span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="literal-block-wrapper float-50 docutils container" id="id9">
+<div class="code-block-caption"><span class="caption-text">person-extension.yang (cont’d)</span></div>
+<div class="highlight-yang"><div class="highlight"><pre><span></span>  <span class="k">grouping </span><span class="s">person-extended</span> <span class="p">{</span>
+    <span class="k">leaf </span><span class="s">gender</span> <span class="p">{</span>
+      <span class="k">type </span><span class="s">identityref</span> <span class="p">{</span>
+        <span class="k">base </span><span class="s">GENDER</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+  <span class="k">augment </span><span class="s">&quot;/person:Person&quot;</span> <span class="p">{</span>
+    <span class="k">uses </span><span class="s">person-extended</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+
+
+
+
+    </article>
+  </slide>  <slide class="level-1" id="id19">
+    <hgroup>
+      <h1>Extensibility (augmenting the model)</h1>
+    </hgroup>
+    <article class="">
+      <div class="literal-block-wrapper docutils container" id="id10">
+<div class="code-block-caption"><span class="caption-text">generate documentation</span></div>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>$ pyang -f tree person-extension.yang person.yang
+module: person
+    +--rw Person
+       +--rw name?                      string
+       +--rw age?                       uint16
+       +--rw person-extension:gender?   enumeration
+</pre></div>
+</div>
+</div>
+<div class="literal-block-wrapper docutils container" id="id11">
+<div class="code-block-caption"><span class="caption-text">generate diagrams</span></div>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>$ pyang -f omni person-extended.yang person.yang &gt; person-extended.scpt
+$ osascript person-extended.scpt
+</pre></div>
+</div>
+</div>
+<a class="reference internal image-reference" href="_images/person-extended.png"><img alt="_images/person-extended.png" src="_images/person-extended.png" style="width: 902.4px; height: 169.6px;" /></a>
+
+
+
+
+    </article>
+  </slide>  <slide class="level-1" id="extensibility-deviating-the-model">
+    <hgroup>
+      <h1>Extensibility (deviating the model)</h1>
+    </hgroup>
+    <article class="">
+      <p>Deviations are failures in model implementation</p>
+<div class="literal-block-wrapper docutils container" id="id12">
+<div class="code-block-caption"><span class="caption-text">person-deviation.yang</span></div>
+<div class="highlight-yang"><div class="highlight"><pre><span></span><span class="kn">module </span><span class="s">person-deviation</span> <span class="p">{</span>
+  <span class="k">deviation </span><span class="s">&quot;/person:Person/person:age&quot;</span> <span class="p">{</span>
+    <span class="k">deviate </span><span class="s">not-supported</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="literal-block-wrapper docutils container" id="id13">
+<div class="code-block-caption"><span class="caption-text">generate documentation</span></div>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>$ pyang -f tree person-deviation.yang person.yang
+module: person
+    +--rw Person
+       +--rw name?                      string
+<span class="hll">                                                <span class="c1"># no age</span>
+</span></pre></div>
+</div>
+</div>
+
+
+
+
+    </article>
+  </slide>  <slide class="level-1" id="i-m-outta-here">
+    <hgroup>
+      <h1>I’m Outta Here</h1>
+    </hgroup>
+    <article class="">
+      <a class="reference internal image-reference" href="_images/abandon.gif"><img alt="I'm outta here" src="_images/abandon.gif" style="width: 640.5px; height: 360.0px;" /></a>
+
+
+
+
+    </article>
+  </slide>  <slide class="level-1" id="no-seriously">
+    <hgroup>
+      <h1>No, Seriously</h1>
+    </hgroup>
+    <article class="">
+      <p>Most people won’t really care but having YANG models means you have one single source of truth to generate documentation, code and validate data. You might not consume YANG models yourself to do those things but you might indirectly via your NMS or tools.</p>
+
+
+
+
+    </article>
+  </slide>
+
+
+  
+
+  <slide class="backdrop"></slide>
+
+</slides>
+
+<!--[if IE]>
+  <script src="http://ajax.googleapis.com/ajax/libs/chrome-frame/1/CFInstall.min.js"></script>
+  <script>CFInstall.check({mode: 'overlay'});</script>
+<![endif]-->
+</body>
+</html>

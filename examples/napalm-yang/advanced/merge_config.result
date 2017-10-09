@@ -1,0 +1,42 @@
+vagrant_box#show run int Gi2
+Building configuration...
+
+Current configuration : 100 bytes
+!
+interface GigabitEthernet2
+ ip address 192.168.1.1 255.255.255.0
+ shutdown
+ negotiation auto
+end
+
+{"interfaces": { "interface": {
+        "both": {
+            "GigabitEthernet2": {
+                "routed_vlan": {
+                    "ipv4": {
+                        "addresses": {
+                            "address": {
+                                "second_only": [
+                                    "192.168.1.1"
+                                ],
+                                "first_only": [
+                                    "192.168.2.1"
+                                ]}}}}}}}}}
+
+interface GigabitEthernet2
+    ip address 192.168.2.1 255.255.255.0
+    no ip address 192.168.1.1 255.255.255.0
+    exit
+
+{}
+
+vagrant_box#show run int Gi2
+Building configuration...
+
+Current configuration : 100 bytes
+!
+interface GigabitEthernet2
+ ip address 192.168.2.1 255.255.255.0
+ shutdown
+ negotiation auto
+end

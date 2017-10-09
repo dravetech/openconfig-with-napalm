@@ -2,6 +2,10 @@
 
 slides slide {
 	font-family: Avenir, 'Open Sans', Arial, sans-serif;
+  -webkit-transition: none;
+  -moz-transition: none;
+  -o-transition: none;
+  transition: none;
 }
 
 .highlight, .linenodiv pre {
@@ -9,16 +13,37 @@ slides slide {
   background: transparent;
 }
 
-.highlight pre, .linenodiv pre {
+pre {
 	font-family: 'Hack', 'Source Code Pro', 'Courier New', monospace;
-	padding: 10px 10px 10px 10px;
+}
+
+.highlight pre, .linenodiv pre {
+    padding: 0.5em;
+    margin: 0.1em;
 	width: 100%;
 	left: 0px;
-	margin: 2px 2px 2px 2px;
+}
+
+slide.flex-columns-2 article {
+    display: inline-flex;
+    flex-flow: column wrap;
+    justify-content: space-around;
+    max-height: 610;
+
+}
+
+article {
+    width: 100%;
+    max-height: 520px;
+    overflow: hidden;
+}
+
+div.smaller-text .highlight .hll {
+    padding: 0em 100% 0em 0px;
 }
 
 .highlight .hll {
-	padding: 0px 100% 5px 0px;
+    padding: 0.1em 100% 0.1em 0px;
 }
 
 td.linenos, td.code {
@@ -38,9 +63,11 @@ a.image-reference {
 }
 
 .float-50 {
-	float: left;
-	width: 49%;
-	padding-right: 5px;
+  overflow: hidden;
+  float: left;
+  width: 49%;
+  max-width: 49%;
+  padding-right: 0.1em;
 }
 
 .title-slide hgroup, .title-slide article {
@@ -56,11 +83,61 @@ a.image-reference {
   font-weight: 600;
 }
 
-.section h2 {
-  text-transform: uppercase;
+strong, b {
+    font-weight: bolder;
+    color: black;
+}
+
+/* bullet points ordered numbers */
+
+ol li ol {
+  margin-left: 1em;
+}
+
+ol ol {
+  margin-top: 0px;
+}
+
+/* end bullet points ordered numbers */
+
+/* bullet points unordered */
+
+ul li::before {
+  content: "";
+  margin-left: 0px;
+  font-weight: normal;
+}
+
+ul li ul li:before {
+  content: "";
+  margin-left: 0px;
+}
+
+/* end bullet points unordered */
+
+.agenda h2 {
+  visibility: hidden;
+}
+
+.agenda li {
   font-size: 2em;
   line-height: 1em;
-  margin: 10% 15% 10% 8%;
+  margin: 1% 10% 1% 10%;
+  color: #AAA;
+}
+
+.agenda .pre {
+  color: #AAA;
+}
+
+.agenda li li {
+  font-size: 1em;
+  margin: 0px;
+}
+
+.agenda li strong {
+  color: #222;
+  font-weight: bold;
 }
 
 div.warning {
@@ -80,6 +157,16 @@ div.warning p.last::before {
 div.warning p.last {
     font-size: 0.75em;
     margin: 4px 4px 4px 4px;
+}
+
+img {
+    display: block;
+    margin: auto;
+}
+
+div.smaller-text pre {
+    font-size: 0.75em;
+    line-height: 1.2em;
 }
 
 @media print {

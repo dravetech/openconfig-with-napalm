@@ -1,0 +1,153 @@
+<!--
+Google IO 2012/2013 HTML5 Slide Template
+
+Authors: Eric Bidelman <ebidel@gmail.com>
+         Luke Mahé <lukem@google.com>
+
+URL: https://code.google.com/p/io-2012-slides
+--><!DOCTYPE html>
+
+
+<html>
+<head>
+  <title>Agenda &mdash; OpenConfig with NAPALM 2017.09.17 documentation</title>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <!--<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">-->
+  <!--<meta name="viewport" content="width=device-width, initial-scale=1.0">-->
+  <!--This one seems to work all the time, but really small on ipad-->
+  <!--<meta name="viewport" content="initial-scale=0.4">-->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+
+  <meta name="hieroglyph-title" data-config-title>
+  <meta name="hieroglyph-subtitle" data-config-subtitle>
+  <meta name="hieroglyph-presenter" data-config-presenter>
+
+  
+  <link rel="stylesheet" media="all"
+        href="_static/theme/css/default.css">
+  <link rel="stylesheet" media="all"
+        href="_static/theme/css/hieroglyph.css">
+  <link rel="stylesheet" media="only screen and (max-device-width: 480px)"
+        href="_static/theme/css/phone.css">
+
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  
+  <link rel="stylesheet" href="_static/custom.css"
+        type="text/css" />
+  
+  <base target="_blank"> <!-- This amazingness opens all links in a new tab. -->
+  
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '2017.09.17',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+
+    <script data-main="_static/js/slides"
+            src="_static/js/require-1.0.8.min.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="top" title="OpenConfig with NAPALM 2017.09.17 documentation" href="index.html" /> 
+</head>
+<body style="opacity: 0">
+
+<slides class="layout-widescreen">
+
+  
+
+  
+    <slide class="title-slide segue nobackground agenda level-1" id="agenda">
+    <hgroup>
+      <h1>Agenda</h1>
+    </hgroup>
+    <article class="">
+      <ol class="arabic simple">
+<li>What is YANG?</li>
+<li><strong>What is OpenConfig?</strong></li>
+<li>What is napalm-yang?</li>
+</ol>
+
+
+
+
+    </article>
+  </slide>  <slide class="level-1" id="what-is-openconfig">
+    <hgroup>
+      <h1>What is OpenConfig?</h1>
+    </hgroup>
+    <article class="">
+      <ol class="arabic simple">
+<li>OpenConfig is an industry effort policed by Google to create vendor agnostic models</li>
+<li><dl class="first docutils">
+<dt>A bunch of models:</dt>
+<dd><ul class="first last">
+<li>repo: <a class="reference external" href="https://github.com/openconfig/public">https://github.com/openconfig/public</a></li>
+<li>docs: <a class="reference external" href="http://ops.openconfig.net/branches/master/">http://ops.openconfig.net/branches/master/</a></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ol>
+<hr class="docutils" />
+<p class="sub-title build-item-1">What is not OpenConfig?</p>
+<ol class="build-item-1 arabic simple">
+<li>Very open despite of what the name might imply :P</li>
+</ol>
+
+
+
+
+    </article>
+  </slide>  <slide class="level-1" id="why-openconfig">
+    <hgroup>
+      <h1>Why OpenConfig</h1>
+    </hgroup>
+    <article class="">
+      <p>OpenConfig provides a set of models you can use to configure and to validate the state of any device regardless of the vendor or OS.</p>
+<a class="build-item-1 reference internal image-reference" href="_images/laughing.gif"><img alt="I'm outta here" class="build-item-1" src="_images/laughing.gif" style="width: 585.0px; height: 415.5px;" /></a>
+
+
+
+
+    </article>
+  </slide>  <slide class="level-1" id="the-sad-truth">
+    <hgroup>
+      <h1>The sad truth</h1>
+    </hgroup>
+    <article class="">
+      <ol class="arabic simple">
+<li>Very few vendors care (or care very little)</li>
+<li>Those who care implement a few models only in their very latest releases</li>
+<li>Vendors implement almost as many deviations as models</li>
+<li>Current implementations don’t seem very stable</li>
+</ol>
+
+
+
+
+    </article>
+  </slide>
+
+
+  
+
+  <slide class="backdrop"></slide>
+
+</slides>
+
+<!--[if IE]>
+  <script src="http://ajax.googleapis.com/ajax/libs/chrome-frame/1/CFInstall.min.js"></script>
+  <script>CFInstall.check({mode: 'overlay'});</script>
+<![endif]-->
+</body>
+</html>

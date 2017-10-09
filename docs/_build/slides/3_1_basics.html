@@ -1,0 +1,854 @@
+<!--
+Google IO 2012/2013 HTML5 Slide Template
+
+Authors: Eric Bidelman <ebidel@gmail.com>
+         Luke Mahé <lukem@google.com>
+
+URL: https://code.google.com/p/io-2012-slides
+--><!DOCTYPE html>
+
+
+<html>
+<head>
+  <title>Agenda &mdash; OpenConfig with NAPALM 2017.09.17 documentation</title>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <!--<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">-->
+  <!--<meta name="viewport" content="width=device-width, initial-scale=1.0">-->
+  <!--This one seems to work all the time, but really small on ipad-->
+  <!--<meta name="viewport" content="initial-scale=0.4">-->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+
+  <meta name="hieroglyph-title" data-config-title>
+  <meta name="hieroglyph-subtitle" data-config-subtitle>
+  <meta name="hieroglyph-presenter" data-config-presenter>
+
+  
+  <link rel="stylesheet" media="all"
+        href="_static/theme/css/default.css">
+  <link rel="stylesheet" media="all"
+        href="_static/theme/css/hieroglyph.css">
+  <link rel="stylesheet" media="only screen and (max-device-width: 480px)"
+        href="_static/theme/css/phone.css">
+
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  
+  <link rel="stylesheet" href="_static/custom.css"
+        type="text/css" />
+  
+  <base target="_blank"> <!-- This amazingness opens all links in a new tab. -->
+  
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '2017.09.17',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+
+    <script data-main="_static/js/slides"
+            src="_static/js/require-1.0.8.min.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="top" title="OpenConfig with NAPALM 2017.09.17 documentation" href="index.html" /> 
+</head>
+<body style="opacity: 0">
+
+<slides class="layout-widescreen">
+
+  
+
+  
+    <slide class="title-slide segue nobackground agenda level-1" id="agenda">
+    <hgroup>
+      <h1>Agenda</h1>
+    </hgroup>
+    <article class="">
+      <ol class="arabic simple">
+<li>What is YANG?</li>
+<li>What is OpenConfig?</li>
+<li><dl class="first docutils">
+<dt><strong>What is napalm-yang?</strong></dt>
+<dd><ol class="first last arabic">
+<li><strong>Basics</strong></li>
+<li>Advanced features</li>
+<li>Integration with <code class="docutils literal"><span class="pre">ansible</span></code></li>
+</ol>
+</dd>
+</dl>
+</li>
+</ol>
+
+
+
+
+    </article>
+  </slide>  <slide class="level-1" id="what-is-napalm-yang">
+    <hgroup>
+      <h1>What is napalm-yang?</h1>
+    </hgroup>
+    <article class="">
+      <p>A library that provides a framework to map native configuration/state to OpenConfig and vice versa</p>
+
+
+
+
+    </article>
+  </slide>  <slide class="level-1" id="parsing-native-data-1">
+    <hgroup>
+      <h1>Parsing native data (1)</h1>
+    </hgroup>
+    <article class="">
+      <a class="reference internal image-reference" href="_images/napalm-yang-parse.png"><img alt="_images/napalm-yang-parse.png" src="_images/napalm-yang-parse.png" style="width: 810.6px; height: 450.1px;" /></a>
+
+
+
+
+    </article>
+  </slide>  <slide class="level-1" id="parsing-native-data-2">
+    <hgroup>
+      <h1>Parsing native data (2)</h1>
+    </hgroup>
+    <article class="">
+      <div class="literal-block-wrapper smaller-text float-50 docutils container" id="id1">
+<div class="code-block-caption"><span class="caption-text">parse_example_1.py</span></div>
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="n">ios_driver</span> <span class="o">=</span> <span class="n">get_network_driver</span><span class="p">(</span><span class="s2">&quot;ios&quot;</span><span class="p">)</span>
+    <span class="k">with</span> <span class="n">ios_driver</span><span class="p">(</span><span class="o">**</span><span class="n">configuration</span><span class="o">.</span><span class="n">ios</span><span class="p">)</span> <span class="k">as</span> <span class="n">device</span><span class="p">:</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="n">device</span><span class="o">.</span><span class="n">yang</span><span class="o">.</span><span class="n">get_openconfig_interfaces</span><span class="p">()</span>
+        <span class="n">pretty_print</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
+
+    <span class="n">junos_driver</span> <span class="o">=</span> <span class="n">get_network_driver</span><span class="p">(</span><span class="s2">&quot;junos&quot;</span><span class="p">)</span>
+    <span class="k">with</span> <span class="n">junos_driver</span><span class="p">(</span><span class="o">**</span><span class="n">configuration</span><span class="o">.</span><span class="n">junos</span><span class="p">)</span> <span class="k">as</span> <span class="n">device</span><span class="p">:</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="n">device</span><span class="o">.</span><span class="n">yang</span><span class="o">.</span><span class="n">get_openconfig_interfaces</span><span class="p">()</span>
+        <span class="n">pretty_print</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
+</pre></div>
+</td></tr></table></div>
+</div>
+
+
+
+
+    </article>
+  </slide>  <slide class="flex-columns-2 level-1" id="parsing-native-data-3">
+    <hgroup>
+      <h1>Parsing native data (3)</h1>
+    </hgroup>
+    <article class="">
+      <div class="literal-block-wrapper smaller-text float-50 docutils container" id="id2">
+<div class="code-block-caption"><span class="caption-text">parse_example_1.py</span></div>
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+<span class="hll">    <span class="n">ios_driver</span> <span class="o">=</span> <span class="n">get_network_driver</span><span class="p">(</span><span class="s2">&quot;ios&quot;</span><span class="p">)</span>
+</span><span class="hll">    <span class="k">with</span> <span class="n">ios_driver</span><span class="p">(</span><span class="o">**</span><span class="n">configuration</span><span class="o">.</span><span class="n">ios</span><span class="p">)</span> <span class="k">as</span> <span class="n">device</span><span class="p">:</span>
+</span><span class="hll">        <span class="n">r</span> <span class="o">=</span> <span class="n">device</span><span class="o">.</span><span class="n">yang</span><span class="o">.</span><span class="n">get_openconfig_interfaces</span><span class="p">()</span>
+</span><span class="hll">        <span class="n">pretty_print</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
+</span>
+    <span class="n">junos_driver</span> <span class="o">=</span> <span class="n">get_network_driver</span><span class="p">(</span><span class="s2">&quot;junos&quot;</span><span class="p">)</span>
+    <span class="k">with</span> <span class="n">junos_driver</span><span class="p">(</span><span class="o">**</span><span class="n">configuration</span><span class="o">.</span><span class="n">junos</span><span class="p">)</span> <span class="k">as</span> <span class="n">device</span><span class="p">:</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="n">device</span><span class="o">.</span><span class="n">yang</span><span class="o">.</span><span class="n">get_openconfig_interfaces</span><span class="p">()</span>
+        <span class="n">pretty_print</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
+</pre></div>
+</td></tr></table></div>
+</div>
+<div class="literal-block-wrapper smaller-text float-50 docutils container" id="id3">
+<div class="code-block-caption"><span class="caption-text">ios-native</span></div>
+<div class="highlight-default"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="hll">interface GigabitEthernet1
+</span><span class="hll"> ip address dhcp
+</span><span class="hll"> negotiation auto
+</span><span class="hll"> no mop enabled
+</span>!
+interface GigabitEthernet2
+ no ip address
+ shutdown
+ negotiation auto
+!
+</pre></div>
+</td></tr></table></div>
+</div>
+<div class="literal-block-wrapper smaller-text float-50 docutils container" id="id4">
+<div class="code-block-caption"><span class="caption-text">ios-openconfig</span></div>
+<div class="highlight-json"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="p">{</span>
+    <span class="nt">&quot;interfaces&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="nt">&quot;interface&quot;</span><span class="p">:</span> <span class="p">{</span>
+<span class="hll">            <span class="nt">&quot;GigabitEthernet1&quot;</span><span class="p">:</span> <span class="p">{</span>
+</span><span class="hll">                <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;GigabitEthernet1&quot;</span><span class="p">,</span> 
+</span><span class="hll">                <span class="nt">&quot;routed-vlan&quot;</span><span class="p">:</span> <span class="p">{</span>
+</span><span class="hll">                    <span class="nt">&quot;ipv4&quot;</span><span class="p">:</span> <span class="p">{</span>
+</span><span class="hll">                        <span class="nt">&quot;config&quot;</span><span class="p">:</span> <span class="p">{</span>
+</span><span class="hll">                            <span class="nt">&quot;enabled&quot;</span><span class="p">:</span> <span class="kc">true</span>
+</span><span class="hll">                        <span class="p">}</span>
+</span><span class="hll">                    <span class="p">}</span>
+</span><span class="hll">                <span class="p">},</span> 
+</span><span class="hll">                <span class="nt">&quot;config&quot;</span><span class="p">:</span> <span class="p">{</span>
+</span><span class="hll">                    <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;ethernetCsmacd&quot;</span><span class="p">,</span> 
+</span><span class="hll">                    <span class="nt">&quot;enabled&quot;</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span> 
+</span><span class="hll">                    <span class="nt">&quot;mtu&quot;</span><span class="p">:</span> <span class="mi">1500</span>
+</span><span class="hll">                <span class="p">}</span>
+</span><span class="hll">            <span class="p">},</span> 
+</span>            <span class="nt">&quot;GigabitEthernet2&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;GigabitEthernet2&quot;</span><span class="p">,</span> 
+                <span class="nt">&quot;routed-vlan&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="nt">&quot;ipv4&quot;</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="nt">&quot;config&quot;</span><span class="p">:</span> <span class="p">{</span>
+                            <span class="nt">&quot;enabled&quot;</span><span class="p">:</span> <span class="kc">true</span>
+                        <span class="p">}</span>
+                    <span class="p">}</span>
+                <span class="p">},</span> 
+                <span class="nt">&quot;config&quot;</span><span class="p">:</span> <span class="p">{</span>
+</pre></div>
+</td></tr></table></div>
+</div>
+
+
+
+
+    </article>
+  </slide>  <slide class="flex-columns-2 level-1" id="parsing-native-data-4">
+    <hgroup>
+      <h1>Parsing native data (4)</h1>
+    </hgroup>
+    <article class="">
+      <div class="literal-block-wrapper smaller-text float-50 docutils container" id="id5">
+<div class="code-block-caption"><span class="caption-text">parse_example_1.py</span></div>
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="n">ios_driver</span> <span class="o">=</span> <span class="n">get_network_driver</span><span class="p">(</span><span class="s2">&quot;ios&quot;</span><span class="p">)</span>
+    <span class="k">with</span> <span class="n">ios_driver</span><span class="p">(</span><span class="o">**</span><span class="n">configuration</span><span class="o">.</span><span class="n">ios</span><span class="p">)</span> <span class="k">as</span> <span class="n">device</span><span class="p">:</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="n">device</span><span class="o">.</span><span class="n">yang</span><span class="o">.</span><span class="n">get_openconfig_interfaces</span><span class="p">()</span>
+        <span class="n">pretty_print</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
+
+<span class="hll">    <span class="n">junos_driver</span> <span class="o">=</span> <span class="n">get_network_driver</span><span class="p">(</span><span class="s2">&quot;junos&quot;</span><span class="p">)</span>
+</span><span class="hll">    <span class="k">with</span> <span class="n">junos_driver</span><span class="p">(</span><span class="o">**</span><span class="n">configuration</span><span class="o">.</span><span class="n">junos</span><span class="p">)</span> <span class="k">as</span> <span class="n">device</span><span class="p">:</span>
+</span><span class="hll">        <span class="n">r</span> <span class="o">=</span> <span class="n">device</span><span class="o">.</span><span class="n">yang</span><span class="o">.</span><span class="n">get_openconfig_interfaces</span><span class="p">()</span>
+</span><span class="hll">        <span class="n">pretty_print</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
+</span></pre></div>
+</td></tr></table></div>
+</div>
+<div class="literal-block-wrapper smaller-text float-50 docutils container" id="id6">
+<div class="code-block-caption"><span class="caption-text">junos-native</span></div>
+<div class="highlight-default"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6
+7</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="hll"><span class="n">ge</span><span class="o">-</span><span class="mi">0</span><span class="o">/</span><span class="mi">0</span><span class="o">/</span><span class="mi">0</span> <span class="p">{</span>
+</span><span class="hll">    <span class="n">unit</span> <span class="mi">0</span> <span class="p">{</span>
+</span><span class="hll">        <span class="n">family</span> <span class="n">inet</span> <span class="p">{</span>
+</span><span class="hll">            <span class="n">dhcp</span><span class="p">;</span>
+</span><span class="hll">        <span class="p">}</span>
+</span><span class="hll">    <span class="p">}</span>
+</span><span class="hll"><span class="p">}</span>
+</span></pre></div>
+</td></tr></table></div>
+</div>
+<div class="literal-block-wrapper smaller-text float-50 docutils container" id="id7">
+<div class="code-block-caption"><span class="caption-text">junos-openconfig</span></div>
+<div class="highlight-json"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="p">{</span>
+    <span class="nt">&quot;interfaces&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="nt">&quot;interface&quot;</span><span class="p">:</span> <span class="p">{</span>
+<span class="hll">            <span class="nt">&quot;ge-0/0/0&quot;</span><span class="p">:</span> <span class="p">{</span>
+</span><span class="hll">                <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;ge-0/0/0&quot;</span><span class="p">,</span> 
+</span><span class="hll">                <span class="nt">&quot;subinterfaces&quot;</span><span class="p">:</span> <span class="p">{</span>
+</span><span class="hll">                    <span class="nt">&quot;subinterface&quot;</span><span class="p">:</span> <span class="p">{</span>
+</span><span class="hll">                        <span class="nt">&quot;0&quot;</span><span class="p">:</span> <span class="p">{</span>
+</span><span class="hll">                            <span class="nt">&quot;index&quot;</span><span class="p">:</span> <span class="s2">&quot;0&quot;</span><span class="p">,</span> 
+</span><span class="hll">                            <span class="nt">&quot;ipv4&quot;</span><span class="p">:</span> <span class="p">{</span>
+</span><span class="hll">                                <span class="nt">&quot;config&quot;</span><span class="p">:</span> <span class="p">{</span>
+</span><span class="hll">                                    <span class="nt">&quot;enabled&quot;</span><span class="p">:</span> <span class="kc">true</span>
+</span><span class="hll">                                <span class="p">}</span>
+</span><span class="hll">                            <span class="p">},</span> 
+</span><span class="hll">                            <span class="nt">&quot;config&quot;</span><span class="p">:</span> <span class="p">{</span>
+</span><span class="hll">                                <span class="nt">&quot;enabled&quot;</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span> 
+</span><span class="hll">                                <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;0&quot;</span>
+</span><span class="hll">                            <span class="p">}</span>
+</span><span class="hll">                        <span class="p">}</span>
+</span><span class="hll">                    <span class="p">}</span>
+</span><span class="hll">                <span class="p">},</span> 
+</span><span class="hll">                <span class="nt">&quot;routed-vlan&quot;</span><span class="p">:</span> <span class="p">{</span>
+</span><span class="hll">                    <span class="nt">&quot;ipv4&quot;</span><span class="p">:</span> <span class="p">{</span>
+</span><span class="hll">                        <span class="nt">&quot;config&quot;</span><span class="p">:</span> <span class="p">{</span>
+</span><span class="hll">                            <span class="nt">&quot;enabled&quot;</span><span class="p">:</span> <span class="kc">false</span>
+</span><span class="hll">                        <span class="p">}</span>
+</span><span class="hll">                    <span class="p">}</span>
+</span><span class="hll">                <span class="p">},</span> 
+</span></pre></div>
+</td></tr></table></div>
+</div>
+
+
+
+
+    </article>
+  </slide>  <slide class="level-1" id="translating-to-native-data">
+    <hgroup>
+      <h1>Translating to native data</h1>
+    </hgroup>
+    <article class="">
+      <a class="reference internal image-reference" href="_images/napalm-yang-translate.png"><img alt="_images/napalm-yang-translate.png" src="_images/napalm-yang-translate.png" style="width: 810.6px; height: 450.1px;" /></a>
+
+
+
+
+    </article>
+  </slide>  <slide class="level-1" id="id17">
+    <hgroup>
+      <h1>Translating to native data</h1>
+    </hgroup>
+    <article class="">
+      <div class="literal-block-wrapper smaller-text float-50 docutils container" id="id8">
+<div class="code-block-caption"><span class="caption-text">translate_example_1.py</span></div>
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;translate_example_1.data.json&quot;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
+
+    <span class="n">ios_driver</span> <span class="o">=</span> <span class="n">get_network_driver</span><span class="p">(</span><span class="s2">&quot;ios&quot;</span><span class="p">)</span>
+    <span class="k">with</span> <span class="n">ios_driver</span><span class="p">(</span><span class="o">**</span><span class="n">configuration</span><span class="o">.</span><span class="n">ios</span><span class="p">)</span> <span class="k">as</span> <span class="n">device</span><span class="p">:</span>
+        <span class="n">device</span><span class="o">.</span><span class="n">yang</span><span class="o">.</span><span class="n">candidate</span><span class="o">.</span><span class="n">load_dict</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="n">device</span><span class="o">.</span><span class="n">yang</span><span class="o">.</span><span class="n">translate</span><span class="p">()</span>
+        <span class="k">print</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
+
+    <span class="n">junos_driver</span> <span class="o">=</span> <span class="n">get_network_driver</span><span class="p">(</span><span class="s2">&quot;junos&quot;</span><span class="p">)</span>
+    <span class="k">with</span> <span class="n">junos_driver</span><span class="p">(</span><span class="o">**</span><span class="n">configuration</span><span class="o">.</span><span class="n">junos</span><span class="p">)</span> <span class="k">as</span> <span class="n">device</span><span class="p">:</span>
+        <span class="n">device</span><span class="o">.</span><span class="n">yang</span><span class="o">.</span><span class="n">candidate</span><span class="o">.</span><span class="n">load_dict</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="n">device</span><span class="o">.</span><span class="n">yang</span><span class="o">.</span><span class="n">translate</span><span class="p">()</span>
+        <span class="k">print</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
+</pre></div>
+</td></tr></table></div>
+</div>
+
+
+
+
+    </article>
+  </slide>  <slide class="level-1" id="id18">
+    <hgroup>
+      <h1>Translating to native data</h1>
+    </hgroup>
+    <article class="">
+      <div class="literal-block-wrapper smaller-text float-50 docutils container" id="id9">
+<div class="code-block-caption"><span class="caption-text">translate_example_1.py</span></div>
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+<span class="hll">    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;translate_example_1.data.json&quot;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+</span><span class="hll">        <span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
+</span>
+    <span class="n">ios_driver</span> <span class="o">=</span> <span class="n">get_network_driver</span><span class="p">(</span><span class="s2">&quot;ios&quot;</span><span class="p">)</span>
+    <span class="k">with</span> <span class="n">ios_driver</span><span class="p">(</span><span class="o">**</span><span class="n">configuration</span><span class="o">.</span><span class="n">ios</span><span class="p">)</span> <span class="k">as</span> <span class="n">device</span><span class="p">:</span>
+        <span class="n">device</span><span class="o">.</span><span class="n">yang</span><span class="o">.</span><span class="n">candidate</span><span class="o">.</span><span class="n">load_dict</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="n">device</span><span class="o">.</span><span class="n">yang</span><span class="o">.</span><span class="n">translate</span><span class="p">()</span>
+        <span class="k">print</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
+
+    <span class="n">junos_driver</span> <span class="o">=</span> <span class="n">get_network_driver</span><span class="p">(</span><span class="s2">&quot;junos&quot;</span><span class="p">)</span>
+    <span class="k">with</span> <span class="n">junos_driver</span><span class="p">(</span><span class="o">**</span><span class="n">configuration</span><span class="o">.</span><span class="n">junos</span><span class="p">)</span> <span class="k">as</span> <span class="n">device</span><span class="p">:</span>
+        <span class="n">device</span><span class="o">.</span><span class="n">yang</span><span class="o">.</span><span class="n">candidate</span><span class="o">.</span><span class="n">load_dict</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="n">device</span><span class="o">.</span><span class="n">yang</span><span class="o">.</span><span class="n">translate</span><span class="p">()</span>
+        <span class="k">print</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
+</pre></div>
+</td></tr></table></div>
+</div>
+<div class="literal-block-wrapper smaller-text float-50 docutils container" id="id10">
+<div class="code-block-caption"><span class="caption-text">translate_example_1.data.json</span></div>
+<div class="highlight-default"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="s2">&quot;eth1&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;eth1&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;routed-vlan&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;ipv4&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;config&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;enabled&quot;</span><span class="p">:</span> <span class="n">true</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;addresses&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;address&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s2">&quot;192.168.1.1/24&quot;</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="s2">&quot;ip&quot;</span><span class="p">:</span> <span class="s2">&quot;192.168.1.1/24&quot;</span><span class="p">,</span>
+                        <span class="s2">&quot;config&quot;</span><span class="p">:</span> <span class="p">{</span>
+                            <span class="s2">&quot;ip&quot;</span><span class="p">:</span> <span class="s2">&quot;192.168.1.1&quot;</span><span class="p">,</span>
+                            <span class="s2">&quot;prefix-length&quot;</span><span class="p">:</span> <span class="mi">24</span>
+                        <span class="p">}</span>
+                    <span class="p">}</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;config&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;ethernetCsmacd&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;enabled&quot;</span><span class="p">:</span> <span class="n">false</span><span class="p">,</span>
+        <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;my description&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;mtu&quot;</span><span class="p">:</span> <span class="mi">9000</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</td></tr></table></div>
+</div>
+
+
+
+
+    </article>
+  </slide>  <slide class="level-1" id="id19">
+    <hgroup>
+      <h1>Translating to native data</h1>
+    </hgroup>
+    <article class="">
+      <div class="literal-block-wrapper smaller-text float-50 docutils container" id="id11">
+<div class="code-block-caption"><span class="caption-text">translate_example_1.py</span></div>
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;translate_example_1.data.json&quot;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
+
+<span class="hll">    <span class="n">ios_driver</span> <span class="o">=</span> <span class="n">get_network_driver</span><span class="p">(</span><span class="s2">&quot;ios&quot;</span><span class="p">)</span>
+</span><span class="hll">    <span class="k">with</span> <span class="n">ios_driver</span><span class="p">(</span><span class="o">**</span><span class="n">configuration</span><span class="o">.</span><span class="n">ios</span><span class="p">)</span> <span class="k">as</span> <span class="n">device</span><span class="p">:</span>
+</span><span class="hll">        <span class="n">device</span><span class="o">.</span><span class="n">yang</span><span class="o">.</span><span class="n">candidate</span><span class="o">.</span><span class="n">load_dict</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+</span><span class="hll">        <span class="n">r</span> <span class="o">=</span> <span class="n">device</span><span class="o">.</span><span class="n">yang</span><span class="o">.</span><span class="n">translate</span><span class="p">()</span>
+</span><span class="hll">        <span class="k">print</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
+</span>
+    <span class="n">junos_driver</span> <span class="o">=</span> <span class="n">get_network_driver</span><span class="p">(</span><span class="s2">&quot;junos&quot;</span><span class="p">)</span>
+    <span class="k">with</span> <span class="n">junos_driver</span><span class="p">(</span><span class="o">**</span><span class="n">configuration</span><span class="o">.</span><span class="n">junos</span><span class="p">)</span> <span class="k">as</span> <span class="n">device</span><span class="p">:</span>
+        <span class="n">device</span><span class="o">.</span><span class="n">yang</span><span class="o">.</span><span class="n">candidate</span><span class="o">.</span><span class="n">load_dict</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="n">device</span><span class="o">.</span><span class="n">yang</span><span class="o">.</span><span class="n">translate</span><span class="p">()</span>
+        <span class="k">print</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
+</pre></div>
+</td></tr></table></div>
+</div>
+<div class="literal-block-wrapper smaller-text float-50 docutils container" id="id12">
+<div class="code-block-caption"><span class="caption-text">ios</span></div>
+<div class="highlight-bash"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6
+7</pre></div></td><td class="code"><div class="highlight"><pre><span></span> interface eth1
+     no switchport
+     ip address <span class="m">192</span>.168.1.1 <span class="m">255</span>.255.255.0
+     shutdown
+     description my description
+     mtu <span class="m">9000</span>
+     <span class="nb">exit</span>
+</pre></div>
+</td></tr></table></div>
+</div>
+
+
+
+
+    </article>
+  </slide>  <slide class="level-1" id="id20">
+    <hgroup>
+      <h1>Translating to native data</h1>
+    </hgroup>
+    <article class="">
+      <div class="literal-block-wrapper smaller-text float-50 docutils container" id="id13">
+<div class="code-block-caption"><span class="caption-text">translate_example_1.py</span></div>
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;translate_example_1.data.json&quot;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
+
+    <span class="n">ios_driver</span> <span class="o">=</span> <span class="n">get_network_driver</span><span class="p">(</span><span class="s2">&quot;ios&quot;</span><span class="p">)</span>
+    <span class="k">with</span> <span class="n">ios_driver</span><span class="p">(</span><span class="o">**</span><span class="n">configuration</span><span class="o">.</span><span class="n">ios</span><span class="p">)</span> <span class="k">as</span> <span class="n">device</span><span class="p">:</span>
+        <span class="n">device</span><span class="o">.</span><span class="n">yang</span><span class="o">.</span><span class="n">candidate</span><span class="o">.</span><span class="n">load_dict</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="n">device</span><span class="o">.</span><span class="n">yang</span><span class="o">.</span><span class="n">translate</span><span class="p">()</span>
+        <span class="k">print</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
+
+<span class="hll">    <span class="n">junos_driver</span> <span class="o">=</span> <span class="n">get_network_driver</span><span class="p">(</span><span class="s2">&quot;junos&quot;</span><span class="p">)</span>
+</span><span class="hll">    <span class="k">with</span> <span class="n">junos_driver</span><span class="p">(</span><span class="o">**</span><span class="n">configuration</span><span class="o">.</span><span class="n">junos</span><span class="p">)</span> <span class="k">as</span> <span class="n">device</span><span class="p">:</span>
+</span><span class="hll">        <span class="n">device</span><span class="o">.</span><span class="n">yang</span><span class="o">.</span><span class="n">candidate</span><span class="o">.</span><span class="n">load_dict</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+</span><span class="hll">        <span class="n">r</span> <span class="o">=</span> <span class="n">device</span><span class="o">.</span><span class="n">yang</span><span class="o">.</span><span class="n">translate</span><span class="p">()</span>
+</span><span class="hll">        <span class="k">print</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
+</span></pre></div>
+</td></tr></table></div>
+</div>
+<div class="literal-block-wrapper smaller-text float-50 docutils container" id="id14">
+<div class="code-block-caption"><span class="caption-text">junos</span></div>
+<div class="highlight-xml"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17</pre></div></td><td class="code"><div class="highlight"><pre><span></span> <span class="nt">&lt;configuration&gt;</span>
+   <span class="nt">&lt;interfaces&gt;</span>
+     <span class="nt">&lt;interface&gt;</span>
+       <span class="nt">&lt;name&gt;</span>eth1<span class="nt">&lt;/name&gt;</span>
+       <span class="nt">&lt;family&gt;</span>
+         <span class="nt">&lt;inet&gt;</span>
+           <span class="nt">&lt;address&gt;</span>
+             <span class="nt">&lt;name&gt;</span>192.168.1.1/24<span class="nt">&lt;/name&gt;</span>
+           <span class="nt">&lt;/address&gt;</span>
+         <span class="nt">&lt;/inet&gt;</span>
+       <span class="nt">&lt;/family&gt;</span>
+       <span class="nt">&lt;disable/&gt;</span>
+       <span class="nt">&lt;description&gt;</span>my description<span class="nt">&lt;/description&gt;</span>
+       <span class="nt">&lt;mtu&gt;</span>9000<span class="nt">&lt;/mtu&gt;</span>
+     <span class="nt">&lt;/interface&gt;</span>
+   <span class="nt">&lt;/interfaces&gt;</span>
+ <span class="nt">&lt;/configuration&gt;</span>
+</pre></div>
+</td></tr></table></div>
+</div>
+
+
+
+
+    </article>
+  </slide>  <slide class="level-1" id="profiles-mappings">
+    <hgroup>
+      <h1>Profiles/Mappings</h1>
+    </hgroup>
+    <article class="">
+      <ul class="simple">
+<li><dl class="first docutils">
+<dt>A <strong>mapping</strong> is a set of rules to map native data to a YANG model and vice versa</dt>
+<dd><ul class="first last">
+<li>A mappings maps to a specific YANG model and follows its structure</li>
+<li>There is a mapping for each YANG model and supported NOS pair</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>A <strong>profile</strong> is a set of mappings for a specific NOS</dt>
+<dd><ul class="first last">
+<li>A NOS might have different associated profiles.</li>
+<li>For example, <code class="docutils literal"><span class="pre">['nos15',</span> <span class="pre">'nos']</span></code></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+
+
+
+
+    </article>
+  </slide>  <slide class="level-1" id="example-parser">
+    <hgroup>
+      <h1>Example (parser)</h1>
+    </hgroup>
+    <article class="">
+      <div class="literal-block-wrapper smaller-text docutils container" id="id15">
+<div class="code-block-caption"><span class="caption-text">mappings/ios/parsers/config/openconfig-interfaces/interfaces.yaml</span></div>
+<div class="highlight-yaml"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="nn">---</span>
+<span class="l l-Scalar l-Scalar-Plain">metadata</span><span class="p p-Indicator">:</span>
+    <span class="l l-Scalar l-Scalar-Plain">processor</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">TextTree</span>
+    <span class="l l-Scalar l-Scalar-Plain">execute</span><span class="p p-Indicator">:</span>
+        <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">method</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">cli</span>
+          <span class="l l-Scalar l-Scalar-Plain">kwargs</span><span class="p p-Indicator">:</span>
+              <span class="l l-Scalar l-Scalar-Plain">commands</span><span class="p p-Indicator">:</span> <span class="p p-Indicator">[</span><span class="s">&quot;show</span><span class="nv"> </span><span class="s">running-config</span><span class="nv"> </span><span class="s">all&quot;</span><span class="p p-Indicator">]</span>
+<span class="l l-Scalar l-Scalar-Plain">interfaces</span><span class="p p-Indicator">:</span>
+    <span class="l l-Scalar l-Scalar-Plain">_process</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">unnecessary</span>
+    <span class="l l-Scalar l-Scalar-Plain">interface</span><span class="p p-Indicator">:</span>
+        <span class="l l-Scalar l-Scalar-Plain">_process</span><span class="p p-Indicator">:</span>
+            <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">path</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">interface</span>
+              <span class="l l-Scalar l-Scalar-Plain">regexp</span><span class="p p-Indicator">:</span> <span class="s">&quot;^(?P&lt;value&gt;(\\w|-)*\\d+(\\/\\d+)*)$&quot;</span>
+              <span class="l l-Scalar l-Scalar-Plain">from</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">root_interfaces.0</span>
+        <span class="l l-Scalar l-Scalar-Plain">config</span><span class="p p-Indicator">:</span>
+            <span class="l l-Scalar l-Scalar-Plain">_process</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">unnecessary</span>
+            <span class="l l-Scalar l-Scalar-Plain">enabled</span><span class="p p-Indicator">:</span>
+                <span class="l l-Scalar l-Scalar-Plain">_process</span><span class="p p-Indicator">:</span>
+                    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">path</span><span class="p p-Indicator">:</span> <span class="s">&quot;shutdown&quot;</span>
+                      <span class="l l-Scalar l-Scalar-Plain">present</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">no</span>
+            <span class="l l-Scalar l-Scalar-Plain">description</span><span class="p p-Indicator">:</span>
+                <span class="l l-Scalar l-Scalar-Plain">_process</span><span class="p p-Indicator">:</span>
+                    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">path</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">description</span>
+            <span class="l l-Scalar l-Scalar-Plain">mtu</span><span class="p p-Indicator">:</span>
+                <span class="l l-Scalar l-Scalar-Plain">_process</span><span class="p p-Indicator">:</span>
+                    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">path</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">ip.mtu</span>
+</pre></div>
+</td></tr></table></div>
+</div>
+
+
+
+
+    </article>
+  </slide>  <slide class="level-1" id="example-translator">
+    <hgroup>
+      <h1>Example (translator)</h1>
+    </hgroup>
+    <article class="">
+      <div class="literal-block-wrapper smaller-text docutils container" id="id16">
+<div class="code-block-caption"><span class="caption-text">napalm_yang/mappings/ios/translators/openconfig-interfaces/interfaces.yaml</span></div>
+<div class="highlight-yaml"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="nn">---</span>
+<span class="l l-Scalar l-Scalar-Plain">metadata</span><span class="p p-Indicator">:</span>
+    <span class="l l-Scalar l-Scalar-Plain">processor</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">TextTranslator</span>
+    <span class="l l-Scalar l-Scalar-Plain">root</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="l l-Scalar l-Scalar-Plain">interfaces</span><span class="p p-Indicator">:</span>
+    <span class="l l-Scalar l-Scalar-Plain">_process</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">unnecessary</span>
+    <span class="l l-Scalar l-Scalar-Plain">interface</span><span class="p p-Indicator">:</span>
+        <span class="l l-Scalar l-Scalar-Plain">_process</span><span class="p p-Indicator">:</span>
+            <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">key_value</span><span class="p p-Indicator">:</span> <span class="s">&quot;interface</span><span class="nv"> </span><span class="s">{{</span><span class="nv"> </span><span class="s">interface_key</span><span class="nv"> </span><span class="s">}}\n&quot;</span>
+              <span class="l l-Scalar l-Scalar-Plain">negate</span><span class="p p-Indicator">:</span> <span class="s">&quot;{{</span><span class="nv"> </span><span class="s">&#39;no&#39;</span><span class="nv"> </span><span class="s">if</span><span class="nv"> </span><span class="s">interface_key[0:4]</span><span class="nv"> </span><span class="s">in</span><span class="nv"> </span><span class="s">[&#39;Port&#39;,</span><span class="nv"> </span><span class="s">&#39;Loop&#39;]</span><span class="nv"> </span><span class="s">else</span><span class="nv"> </span><span class="s">&#39;default&#39;</span><span class="nv"> </span><span class="s">}}</span><span class="nv"> </span><span class="s">interface</span><span class="nv"> </span><span class="s">{{</span><span class="nv"> </span><span class="s">interface_key</span><span class="nv"> </span><span class="s">}}\n&quot;</span>
+              <span class="l l-Scalar l-Scalar-Plain">end</span><span class="p p-Indicator">:</span> <span class="s">&quot;</span><span class="nv">    </span><span class="s">exit\n&quot;</span>
+        <span class="l l-Scalar l-Scalar-Plain">config</span><span class="p p-Indicator">:</span>
+            <span class="l l-Scalar l-Scalar-Plain">_process</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">unnecessary</span>
+            <span class="l l-Scalar l-Scalar-Plain">enabled</span><span class="p p-Indicator">:</span>
+                <span class="l l-Scalar l-Scalar-Plain">_process</span><span class="p p-Indicator">:</span>
+                    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">value</span><span class="p p-Indicator">:</span> <span class="s">&quot;</span><span class="nv">    </span><span class="s">shutdown\n&quot;</span>
+                      <span class="l l-Scalar l-Scalar-Plain">when</span><span class="p p-Indicator">:</span> <span class="s">&quot;{{</span><span class="nv"> </span><span class="s">not</span><span class="nv"> </span><span class="s">model</span><span class="nv"> </span><span class="s">}}&quot;</span>
+            <span class="l l-Scalar l-Scalar-Plain">description</span><span class="p p-Indicator">:</span>
+                <span class="l l-Scalar l-Scalar-Plain">_process</span><span class="p p-Indicator">:</span>
+                    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">value</span><span class="p p-Indicator">:</span> <span class="s">&quot;</span><span class="nv">    </span><span class="s">description</span><span class="nv"> </span><span class="s">{{</span><span class="nv"> </span><span class="s">model</span><span class="nv"> </span><span class="s">}}\n&quot;</span>
+                      <span class="l l-Scalar l-Scalar-Plain">negate</span><span class="p p-Indicator">:</span> <span class="s">&quot;</span><span class="nv">    </span><span class="s">default</span><span class="nv"> </span><span class="s">description\n&quot;</span>
+            <span class="l l-Scalar l-Scalar-Plain">mtu</span><span class="p p-Indicator">:</span>
+                <span class="l l-Scalar l-Scalar-Plain">_process</span><span class="p p-Indicator">:</span>
+                    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">value</span><span class="p p-Indicator">:</span> <span class="s">&quot;</span><span class="nv">    </span><span class="s">mtu</span><span class="nv"> </span><span class="s">{{</span><span class="nv"> </span><span class="s">model</span><span class="nv"> </span><span class="s">}}\n&quot;</span>
+                      <span class="l l-Scalar l-Scalar-Plain">negate</span><span class="p p-Indicator">:</span> <span class="s">&quot;</span><span class="nv">    </span><span class="s">default</span><span class="nv"> </span><span class="s">mtu\n&quot;</span>
+</pre></div>
+</td></tr></table></div>
+</div>
+
+
+
+
+    </article>
+  </slide>
+
+
+  
+
+  <slide class="backdrop"></slide>
+
+</slides>
+
+<!--[if IE]>
+  <script src="http://ajax.googleapis.com/ajax/libs/chrome-frame/1/CFInstall.min.js"></script>
+  <script>CFInstall.check({mode: 'overlay'});</script>
+<![endif]-->
+</body>
+</html>

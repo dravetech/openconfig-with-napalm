@@ -1,0 +1,10 @@
+interface GigabitEthernet1
+ ip address dhcp
+ negotiation auto
+ no mop enabled
+!
+interface GigabitEthernet2
+ no ip address
+ shutdown
+ negotiation auto
+!

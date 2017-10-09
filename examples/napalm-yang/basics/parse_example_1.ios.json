@@ -1,0 +1,51 @@
+{
+    "interfaces": {
+        "interface": {
+            "GigabitEthernet1": {
+                "name": "GigabitEthernet1", 
+                "routed-vlan": {
+                    "ipv4": {
+                        "config": {
+                            "enabled": true
+                        }
+                    }
+                }, 
+                "config": {
+                    "type": "ethernetCsmacd", 
+                    "enabled": true, 
+                    "mtu": 1500
+                }
+            }, 
+            "GigabitEthernet2": {
+                "name": "GigabitEthernet2", 
+                "routed-vlan": {
+                    "ipv4": {
+                        "config": {
+                            "enabled": true
+                        }
+                    }
+                }, 
+                "config": {
+                    "type": "ethernetCsmacd", 
+                    "enabled": false, 
+                    "mtu": 1500
+                }
+            }, 
+            "GigabitEthernet3": {
+                "name": "GigabitEthernet3", 
+                "routed-vlan": {
+                    "ipv4": {
+                        "config": {
+                            "enabled": true
+                        }
+                    }
+                }, 
+                "config": {
+                    "type": "ethernetCsmacd", 
+                    "enabled": false, 
+                    "mtu": 1500
+                }
+            }
+        }
+    }
+}

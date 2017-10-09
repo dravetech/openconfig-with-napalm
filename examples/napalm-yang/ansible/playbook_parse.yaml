@@ -1,0 +1,22 @@
+---
+- name: Playbook to gather OpenConfig models
+  hosts: all
+  gather_facts: false
+  connection: local
+  tags: print_action
+
+  tasks:
+    - name: Let's gather config of interfaces from device
+      napalm_parse_yang:
+        dev_os: "{{ dev_os }}"
+        hostname: "{{ hostname }}"
+        username: "{{ username }}"
+        password: "{{ password }}"
+        mode: "config"
+        optional_args:
+            port: "{{ port }}"
+        models:
+            - openconfig_interfaces
+      register: running
+    - debug:
+       msg: "{{ running|to_nice_json }}"

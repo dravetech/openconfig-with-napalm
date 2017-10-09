@@ -1,0 +1,72 @@
+---
+metadata:
+    processor: TextTree
+    execute:
+        - method: cli
+          kwargs:
+              commands: ["show running-config all"]
+interfaces:
+    _process: unnecessary
+    interface:
+        _process:
+            - path: interface
+              regexp: "^(?P<value>(\\w|-)*\\d+(\\/\\d+)*)$"
+              from: root_interfaces.0
+        name:
+            _process: unnecessary
+        hold-time:
+            _process: not_implemented
+            config:
+                _process: not_implemented
+                down:
+                    _process: not_implemented
+                up:
+                    _process: not_implemented
+        config:
+            _process: unnecessary
+            name:
+                _process: unnecessary
+            type:
+                _process:
+                    - value: "{{ interface_key }}"
+                      regexp: "(?P<value>(\\w|-)*)\\d+"
+                      map:
+                          fastethernet: ethernetCsmacd
+                          gigabitethernet: ethernetCsmacd
+                          management: ethernetCsmacd
+                          loopback: softwareLoopback
+                          port-channel: ieee8023adLag
+                          vlan: l3ipvlan
+            enabled:
+                _process:
+                    - path: "shutdown"
+                      present: no
+            description:
+                _process:
+                    - path: description
+            mtu:
+                _process:
+                    - path: ip.mtu
+        subinterfaces:
+            _process: unnecessary
+            subinterface:
+                _process:
+                    - path: interface
+                      regexp: "{{interface_key}}\\.(?P<value>\\d+)"
+                      from: root_interfaces.0
+                index:
+                    _process: unnecessary
+                config:
+                    _process: unnecessary
+                    index:
+                        _process: unnecessary
+                    name:
+                        _process:
+                            - value: "{{ interface_key }}.{{ subinterface_key}}"
+                    enabled:
+                        _process:
+                            - path: "shutdown"
+                              present: no
+                    description:
+                        _process:
+                            - path: description

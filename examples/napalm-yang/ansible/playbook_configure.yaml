@@ -1,0 +1,28 @@
+---
+- name: Playbook to configure devices using YANG models
+  hosts: all
+  gather_facts: false
+  connection: local
+  tags: print_action
+
+  tasks:
+    - name: Install Config and save diff
+      napalm_yang_install_config:
+        dev_os: "{{ dev_os }}"
+        hostname: "{{ hostname }}"
+        username: "{{ username }}"
+        password: "{{ password }}"
+        optional_args:
+            port: "{{ port }}"
+        config: "{{ yang_data }}"
+        profiles: "{{ profiles }}"
+      register: result
+    - name: merge configuration
+      debug:
+        msg: "{{ result.config }}"
+    - name: napalm-yang diff
+      debug:
+        msg: "{{ result.yang_diff|to_nice_json }}"
+    - name: native diff
+      debug:
+        msg: "{{ result.native_diff }}"

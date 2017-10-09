@@ -1,0 +1,173 @@
+# Install Config and save diff ********************************************************************************************
+  * junos                      - changed=True -- ---------------------------------------------
+# merge configuration *****************************************************************************************************
+  * junos                      - changed=False ----------------------------------------------------
+    <configuration>
+      <interfaces>
+        <interface>
+          <name>ae0</name>
+          <unit>
+            <name>1</name>
+            <vlan-id>1</vlan-id>
+            <family>
+              <inet>
+                <address>
+                  <name>192.168.101.1/24</name>
+                </address>
+              </inet>
+            </family>
+            <disable/>
+            <description>ae0.1</description>
+          </unit>
+          <vlan-tagging/>
+          <unit>
+            <name>0</name>
+            <vlan-id>100</vlan-id>
+            <family>
+              <inet>
+                <address>
+                  <name>192.168.100.1/24</name>
+                </address>
+                <address>
+                  <name>172.20.100.1/24</name>
+                </address>
+              </inet>
+            </family>
+            <description>A new description</description>
+          </unit>
+          <vlan-tagging/>
+          <unit>
+            <name>2</name>
+            <vlan-id>2</vlan-id>
+            <family>
+              <inet>
+                <address>
+                  <name>192.168.102.1/24</name>
+                </address>
+              </inet>
+            </family>
+            <description>ae0.2</description>
+          </unit>
+          <vlan-tagging/>
+        </interface>
+        <interface>
+          <name>lo0</name>
+          <unit>
+            <name>0</name>
+            <description>lo0.0</description>
+          </unit>
+          <description>lo0</description>
+        </interface>
+        <interface>
+          <name>ge-0/0/1</name>
+          <disable/>
+          <description>ge-0/0/1</description>
+        </interface>
+        <interface>
+          <name>ge-0/0/0</name>
+          <unit>
+            <name>0</name>
+            <family>
+              <inet>
+                <address>
+                  <name>10.0.2.15/24</name>
+                </address>
+              </inet>
+            </family>
+            <description>ge-0/0/0.0</description>
+          </unit>
+          <description>management interface</description>
+          <mtu>1400</mtu>
+        </interface>
+      </interfaces>
+    </configuration>
+    
+# napalm-yang diff ********************************************************************************************************
+  * junos                      - changed=False ----------------------------------------------------
+    {
+        "interfaces": {
+            "interface": {
+                "both": {
+                    "ge-0/0/0": {
+                        "config": {
+                            "description": {
+                                "first": "management interface", 
+                                "second": ""
+                            }, 
+                            "mtu": {
+                                "first": "1400", 
+                                "second": "0"
+                            }
+                        }, 
+                        "subinterfaces": {
+                            "subinterface": {
+                                "both": {
+                                    "0": {
+                                        "config": {
+                                            "description": {
+                                                "first": "ge-0/0/0.0", 
+                                                "second": ""
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }, 
+                "first_only": [
+                    "ae0", 
+                    "lo0", 
+                    "ge-0/0/1"
+                ], 
+                "second_only": []
+            }
+        }
+    }
+# native diff *************************************************************************************************************
+  * junos                      - changed=False ----------------------------------------------------
+    [edit interfaces ge-0/0/0]
+    +   description "management interface";
+    +   mtu 1400;
+    [edit interfaces ge-0/0/0 unit 0]
+    +    description ge-0/0/0.0;
+    [edit interfaces]
+    +   ge-0/0/1 {
+    +       description ge-0/0/1;
+    +       disable;
+    +   }
+    +   ae0 {
+    +       vlan-tagging;
+    +       unit 0 {
+    +           description "A new description";
+    +           vlan-id 100;
+    +           family inet {
+    +               address 192.168.100.1/24;
+    +               address 172.20.100.1/24;
+    +           }
+    +       }
+    +       unit 1 {
+    +           disable;
+    +           description ae0.1;
+    +           vlan-id 1;
+    +           family inet {
+    +               address 192.168.101.1/24;
+    +           }
+    +       }
+    +       unit 2 {
+    +           description ae0.2;
+    +           vlan-id 2;
+    +           family inet {
+    +               address 192.168.102.1/24;
+    +           }
+    +       }
+    +   }
+    +   lo0 {
+    +       description lo0;
+    +       unit 0 {
+    +           description lo0.0;
+    +       }
+    +   }
+
+# STATS *******************************************************************************************************************
+junos    : ok=4	changed=1	failed=0	unreachable=0

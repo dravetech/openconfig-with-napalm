@@ -1,0 +1,136 @@
+# Install Config and save diff ********************************************************************************************
+  * ios                        - changed=True --  -------------------------------------------------
+# merge configuration *****************************************************************************************************
+  * ios                        - changed=False ----------------------------------------------------
+    interface Port-channel1
+        description blah
+        mtu 9000
+        exit
+    interface Port-channel1.1
+        exit
+    interface GigabitEthernet1
+        description This is a description
+        mtu 1514
+        exit
+    interface Loopback1
+        description a loopback
+        exit
+    interface GigabitEthernet2
+        ip address 192.168.0.1 255.255.255.0
+        description so much oc
+        mtu 1514
+        exit
+    interface GigabitEthernet2.1
+        encapsulation dot1q 10
+        ip address 172.20.1.1 255.255.255.0 secondary
+        ip address 192.168.1.1 255.255.255.0
+        description another subiface
+        exit
+    interface GigabitEthernet2.2
+        encapsulation dot1q 20
+        ip address 192.168.2.1 255.255.255.0
+        description asdasdasd
+        exit
+    interface GigabitEthernet3
+        description unused
+        mtu 1514
+        exit
+    
+# napalm-yang diff ********************************************************************************************************
+  * ios                        - changed=False ----------------------------------------------------
+    {
+        "interfaces": {
+            "interface": {
+                "both": {
+                    "GigabitEthernet1": {
+                        "config": {
+                            "description": {
+                                "first": "This is a description", 
+                                "second": ""
+                            }, 
+                            "mtu": {
+                                "first": "1514", 
+                                "second": "1500"
+                            }
+                        }
+                    }, 
+                    "GigabitEthernet2": {
+                        "config": {
+                            "description": {
+                                "first": "so much oc", 
+                                "second": ""
+                            }, 
+                            "mtu": {
+                                "first": "1514", 
+                                "second": "1500"
+                            }
+                        }, 
+                        "routed_vlan": {
+                            "ipv4": {
+                                "addresses": {
+                                    "address": {
+                                        "first_only": [
+                                            "192.168.0.1"
+                                        ], 
+                                        "second_only": []
+                                    }
+                                }
+                            }
+                        }, 
+                        "subinterfaces": {
+                            "subinterface": {
+                                "first_only": [
+                                    "1", 
+                                    "2"
+                                ], 
+                                "second_only": []
+                            }
+                        }
+                    }, 
+                    "GigabitEthernet3": {
+                        "config": {
+                            "description": {
+                                "first": "unused", 
+                                "second": ""
+                            }, 
+                            "mtu": {
+                                "first": "1514", 
+                                "second": "1500"
+                            }
+                        }
+                    }
+                }, 
+                "first_only": [
+                    "Port-channel1", 
+                    "Loopback1"
+                ], 
+                "second_only": []
+            }
+        }
+    }
+# native diff *************************************************************************************************************
+  * ios                        - changed=False ----------------------------------------------------
+    +interface Port-channel1
+    +    description blah
+    +interface Port-channel1.1
+    +    exit
+    +interface GigabitEthernet1
+    +    description This is a description
+    +    mtu 1514
+    +    exit
+    +interface Loopback1
+    +    description a loopback
+    +interface GigabitEthernet2
+    +    ip address 192.168.0.1 255.255.255.0
+    +    description so much oc
+    +    mtu 1514
+    +    exit
+    +interface GigabitEthernet2.1
+    +    encapsulation dot1q 10
+    +interface GigabitEthernet2.2
+    +    encapsulation dot1q 20
+    +Error: received error code 5 when looking for missing lines
+    +!Error: cfgdiff returned error 5
+
+# STATS *******************************************************************************************************************
+ios    : ok=4	changed=1	failed=0	unreachable=0

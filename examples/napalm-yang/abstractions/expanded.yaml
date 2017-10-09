@@ -1,0 +1,26 @@
+---
+interfaces:
+    interface:
+        ethernet1:
+            config:
+                description: uplink to spine00
+                enabled: false
+                mtu: 9000
+                type: ethernetCsmacd
+            name: GigabitEthernet2
+            routed_vlan:
+                ipv4:
+                    addresses:
+                        address:
+                            10.0.0.0:
+                                config:
+                                    ip: 10.0.0.0
+                                    prefix_length: 31
+                                    secondary: false
+                                ip: 10.0.0.0
+                    config:
+                        enabled: true
+bgp:
+    neigbhors:
+        neighbor:
+            10.0.0.1:
